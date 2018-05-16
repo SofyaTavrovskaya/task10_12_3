@@ -70,6 +70,10 @@ echo "Create VM1.xml and VM2.xml from template"
 envsubst < templates/vm1_template.xml > vm1.xml
 envsubst < templates/vm2_template.xml > vm2.xml
 
+echo "Create docker-compose.yml for VM1 and VM2 from template"
+envsubst < templates/docker-compose_template_VM1.yml > config-drives/vm1-config/docker-compose.yml
+envsubst < templates/docker-compose_template_VM2.yml > config-drives/vm2-config/docker-compose.yml
+
 echo "Create config drives"
 mkisofs -o "$VM1_CONFIG_ISO" -V cidata -r -J --quiet config-drives/vm1-config
 mkisofs -o "$VM2_CONFIG_ISO" -V cidata -r -J --quiet config-drives/vm2-config
@@ -80,4 +84,7 @@ virsh define vm2.xml
 
 echo "Start VMs"
 virsh start vm1
+
+sleep 200
+
 virsh start vm2

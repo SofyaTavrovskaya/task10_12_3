@@ -1,0 +1,7 @@
+version: '2'
+services:
+  apache:
+    image: ${APACHE_IMAGE}
+    hostname: apache
+    ports:
+     - "${VM2_VXLAN_IP}:${APACHE_PORT}:80"
