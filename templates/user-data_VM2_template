@@ -6,9 +6,13 @@ runcmd:
  - 'bridge fdb append to 00:00:00:00:00:00 dst ${VM1_INTERNAL_IP} dev ${VXLAN_IF}'
  - 'ip addr add ${VM2_VXLAN_IP}/24 dev ${VXLAN_IF}'
  - 'ip link set up dev ${VXLAN_IF}'
+ - 'docker-compose -f /mnt/docker-compose.yml up'
+
+mounts:
+ - [ /dev/sr0, /mnt ]
 
 package_upgrade: false
-packages: ['docker-ce']
+packages: ['docker-ce', 'docker-compose']
 apt:
 #  preserve_sources_list: true
 #  sources:

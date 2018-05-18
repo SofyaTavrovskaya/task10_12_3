@@ -4,6 +4,8 @@ echo "Removing debris"
 rm -f work_config:Wq
 rm -f vm?.xml
 rm -f networks/*
+rm docker/certs/*
+rm docker/etc/*
 
 virsh net-destroy external
 virsh net-destroy internal

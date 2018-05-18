@@ -74,6 +74,52 @@ echo "Create docker-compose.yml for VM1 and VM2 from template"
 envsubst < templates/docker-compose_template_VM1.yml > config-drives/vm1-config/docker-compose.yml
 envsubst < templates/docker-compose_template_VM2.yml > config-drives/vm2-config/docker-compose.yml
 
+echo "Create directory for docker"
+mkdir -p docker/etc docker/certs
+
+echo "Create nginx.conf from template"
+envsubst < templates/nginx_template.conf > docker/etc/nginx.conf
+
+if [ ! -e docker/certs/root.key ]
+then
+echo "Root key is absent, generating"
+openssl genrsa -out docker/certs/root.key 4096
+else
+echo "Root key present"
+fi
+
+echo "Generating root csr"
+openssl req -new -nodes\
+    -keyout docker/certs/root.key\
+    -out docker/certs/root.csr\
+    -subj "/C=UA/ST=Kharkov/L=Kharkov/O=Mirantis/OU=dev_ops/CN=${VM1_NAME}/"
+
+echo "Generating root certificate"
+openssl x509 -req\
+    -signkey docker/certs/root.key\
+    -in docker/certs/root.csr\
+    -out docker/certs/root.crt
+
+echo "Generating web.key"
+openssl genrsa -out docker/certs/web.key 2048
+
+echo "Generating web.csr"
+openssl req -new\
+    -key docker/certs/web.key\
+    -out docker/certs/web.csr\
+    -subj "/C=UA/ST=Kharkov/L=Kharkov/O=Mirantis/OU=dev_ops/CN=${VM1_NAME}/"
+
+echo "Generating web.crt"
+openssl x509 -req\
+    -in docker/certs/web.csr\
+    -CA docker/certs/root.crt\
+    -CAkey docker/certs/root.key\
+    -CAcreateserial\
+    -out docker/certs/web.crt\
+    -extfile <(printf "subjectAltName=IP:${VM1_EXTERNAL_IP},DNS:${VM1_NAME}")
+
+cat docker/certs/root.crt docker/certs/web.crt  > docker/certs/web-ca-chain.pem
+
 echo "Create config drives"
 mkisofs -o "$VM1_CONFIG_ISO" -V cidata -r -J --quiet config-drives/vm1-config
 mkisofs -o "$VM2_CONFIG_ISO" -V cidata -r -J --quiet config-drives/vm2-config
@@ -84,7 +130,5 @@ virsh define vm2.xml
 
 echo "Start VMs"
 virsh start vm1
-
-sleep 200
 
 virsh start vm2

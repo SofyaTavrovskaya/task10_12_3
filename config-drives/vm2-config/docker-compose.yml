@@ -1,0 +1,7 @@
+version: '2'
+services:
+  apache:
+    image: "httpd:2.4"
+    hostname: apache
+    ports:
+     - "10.255.0.102:13254:80"
