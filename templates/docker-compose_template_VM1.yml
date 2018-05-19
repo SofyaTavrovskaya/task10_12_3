@@ -4,8 +4,8 @@ services:
     image: ${NGINX_IMAGE}
     hostname: nginx
     volumes:
-      - ./etc:/etc/nginx/conf.d
-      - ./certs:/etc/nginx/certs
+      - /tmp/mnt/certs:/etc/nginx/certs
+      - /tmp/mnt/etc:/etc/nginx/conf.d
       - ${NGINX_LOG_DIR}:/var/log/nginx
     ports:
-      - "${VM1_VXLAN_IP}:${NGINX_PORT}:443"
+      - "${VM1_EXTERNAL_IP}:${NGINX_PORT}:443"

@@ -2,4 +2,4 @@
 echo "Mirantis task 3 test"
 
 echo "Deploying dockers"
-docker-compose up -d
+docker-compose up -d 

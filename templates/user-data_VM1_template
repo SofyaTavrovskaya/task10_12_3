@@ -10,7 +10,8 @@ runcmd:
  - 'iptables -t nat -A POSTROUTING -o ${VM1_EXTERNAL_IF} -j MASQUERADE'
  - 'iptables -A FORWARD -i ${VM1_INTERNAL_IF} -o ${VM1_EXTERNAL_IF} -j ACCEPT'
  - 'iptables -A FORWARD -i ${VM1_EXTERNAL_IF} -o ${VM1_INTERNAL_IF} -j ACCEPT'
- - 'bash /mnt/script.sh'
+ - 'cp -r /mnt/ /tmp/'
+ - 'bash /tmp/mnt/script.sh'
 
 mounts:
  - [ /dev/sr0, /mnt ]

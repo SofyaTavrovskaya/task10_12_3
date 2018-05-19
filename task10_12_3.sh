@@ -120,6 +120,9 @@ openssl x509 -req\
 
 cat docker/certs/root.crt docker/certs/web.crt  > docker/certs/web-ca-chain.pem
 
+cp -R docker/certs/ config-drives/vm1-config/
+cp -R docker/etc/ config-drives/vm1-config/
+
 echo "Create config drives"
 mkisofs -o "$VM1_CONFIG_ISO" -V cidata -r -J --quiet config-drives/vm1-config
 mkisofs -o "$VM2_CONFIG_ISO" -V cidata -r -J --quiet config-drives/vm2-config
@@ -132,3 +135,5 @@ echo "Start VMs"
 virsh start vm1
 
 virsh start vm2
+
+
