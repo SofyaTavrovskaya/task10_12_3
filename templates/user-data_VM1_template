@@ -11,7 +11,7 @@ runcmd:
  - 'iptables -A FORWARD -i ${VM1_INTERNAL_IF} -o ${VM1_EXTERNAL_IF} -j ACCEPT'
  - 'iptables -A FORWARD -i ${VM1_EXTERNAL_IF} -o ${VM1_INTERNAL_IF} -j ACCEPT'
  - 'cp -r /mnt/ /tmp/'
- - 'bash /tmp/mnt/script.sh'
+ - 'docker-compose -f /tmp/mnt/docker-compose.yml up'
 
 mounts:
  - [ /dev/sr0, /mnt ]

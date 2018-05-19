@@ -78,7 +78,7 @@ echo "Create directory for docker"
 mkdir -p docker/etc docker/certs
 
 echo "Create nginx.conf from template"
-envsubst < templates/nginx_template.conf > docker/etc/nginx.conf
+envsubst '${VM2_VXLAN_IP},${APACHE_PORT}'< templates/nginx_template.conf> docker/etc/nginx.conf
 
 if [ ! -e docker/certs/root.key ]
 then
