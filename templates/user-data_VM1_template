@@ -17,7 +17,7 @@ mounts:
  - [ /dev/sr0, /mnt ]
 
 package_upgrade: false
-packages: ['docker-ce']
+packages: ['docker-ce', 'docker-compose']
 apt:
 #  preserve_sources_list: true
 #  sources:
